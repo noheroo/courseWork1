@@ -2,7 +2,7 @@ package ru.skypro;
 
 public class Main {
 
-    public static Employee[] employees = new Employee[10];
+
 
     public static void main(String[] args) {
 
@@ -12,254 +12,56 @@ public class Main {
         Employee employee4 = new Employee("Круглов", "Дмитрий", "Петрович", 4, 170_000);
         Employee employee5 = new Employee("Квадратный", "Павел", "Алексеевич", 1, 40_000);
         Employee employee6 = new Employee("Треуголов", "Валера", "Павлович", 3, 110_000);
-        Employee employee7 = new Employee("Малов", "Данила", "Андреевич", 3, 74_000);
+        Employee employee7 = new Employee("Малов", "Данила", "Андреевич", 2, 74_000);
+        Employee employee8 = new Employee("Моторный", "Ринат", "Алексеевич", 5, 240_000);
 
-        addEmployee(employee1);
-        addEmployee(employee2);
-        addEmployee(employee3);
-        addEmployee(employee4);
-        addEmployee(employee5);
-        addEmployee(employee6);
-        addEmployee(employee7);
 
-        printAll();
+        EmployeeBook employeeBook1 = new EmployeeBook();
 
-        System.out.printf("%nСумма затрат на зарплаты в месяц %d %n", getSum());
-        System.out.printf("Cреднее значение зарплат %.2f %n", getAverageSalary());
-        System.out.printf("%nМаксимальная зарплата у %s %n", getEmployeeMaxSalary());
-        System.out.printf("Минимальная зарплата у %s %n", getEmployeeMinSalary());
+        employeeBook1.addEmployee(employee1);
+        employeeBook1.addEmployee(employee2);
+        employeeBook1.addEmployee(employee3);
+        employeeBook1.addEmployee(employee4);
+        employeeBook1.addEmployee(employee5);
+        employeeBook1.addEmployee(employee6);
+        employeeBook1.addEmployee(employee7);
 
-        printFIO();
+        employeeBook1.printAll();
 
-        salaryIndexing(20);
+        System.out.printf("%nСумма затрат на зарплаты в месяц %d %n", employeeBook1.getSum());
+        System.out.printf("Cреднее значение зарплат %.2f %n", employeeBook1.getAverageSalary());
+        System.out.printf("%nМаксимальная зарплата у %s %n", employeeBook1.getEmployeeMaxSalary());
+        System.out.printf("Минимальная зарплата у %s %n", employeeBook1.getEmployeeMinSalary());
 
-        searchSalaryLess(100_000);
-        searchSalaryMore(100_000);
+        employeeBook1.printFIO();
 
-        System.out.printf("%nМаксимальная зарплата в отделе у %s %n", getEmployeeInDepartmentMaxSalary(3));
-        System.out.printf("Минимальная зарплата в отделе у %s %n", getEmployeeInDepartmentMinSalary(3));
+        employeeBook1.salaryIndexing(20);
 
-        System.out.printf("%nСумма затрат на зарплаты в месяц, в отделе %d %n", getSumInDepartment(3));
-        System.out.printf("Cреднее значение зарплат,в отделе %.2f %n", getAverageSalaryInDepartment(3));
-        salaryIndexingInDepartment(3,10);
-        printDepartment(3);
-        printAll();
-    }
+        employeeBook1.searchSalaryLess(100_000);
+        employeeBook1.searchSalaryMore(100_000);
 
-    //добавление нового сотрудника в массив
-    private static void addEmployee(Employee Employee) {
-        if (isFull()) {
-            System.out.println("Невозможно добавить сотрудника, ID, которого " + Employee.getId() + ", нет места");
-            return;
-        }
-        for (int i = 0; i < employees.length; i++) {
-            if (employees[i] == null) {
-                employees[i] = Employee;
-                return;
-            }
-        }
-    }
+        System.out.printf("%nМаксимальная зарплата в отделе у %s %n", employeeBook1.getEmployeeInDepartmentMaxSalary(3));
+        System.out.printf("Минимальная зарплата в отделе у %s %n", employeeBook1.getEmployeeInDepartmentMinSalary(3));
 
-    //проверка полный массив или нет
-    public static boolean isFull() {
-        for (Employee employee : employees) {
-            if (employee == null) {
-                return false;
-            }
-        }
-        return true;
-    }
+        System.out.printf("%nСумма затрат на зарплаты в месяц, в отделе %d %n", employeeBook1.getSumInDepartment(3));
+        System.out.printf("Cреднее значение зарплат,в отделе %.2f %n", employeeBook1.getAverageSalaryInDepartment(3));
+        employeeBook1.salaryIndexingInDepartment(3,10);
+        employeeBook1.printDepartment(3);
+        employeeBook1.printAll();
 
-    //сумма всех зарплат
-    public static int getSum() {
-        int sum = 0;
-        for (Employee employee : employees) {
-            if (employee != null) {
-                sum = sum + employee.getSalary();
-            }
-        }
-        return sum;
-    }
+        employeeBook1.deleteEmployeeViaId(9);
+        employeeBook1.deleteEmployeeViaFIO("КаарпОВ", "ПетР", "ВасиЛьевич");
+        employeeBook1.deleteEmployeeViaIdAndFIO(6,"Круглов","ДмиТрий", "петрович");
 
-    //определение количества сотрудников
-    public static int getQuantityEmployee() {
-        int quantity = 0;
-        for (Employee employee : employees) {
-            if (employee != null) {
-                quantity++;
-            }
-        }
-        return quantity;
-    }
 
-    //расчет средней зарплаты
-    public static float getAverageSalary() {
-        return (float) getSum() / getQuantityEmployee();
-    }
+        employeeBook1.addEmployee(employee8);
+        employeeBook1.printAll();
 
-    //Определение сотрудника с минимальной зарплатой
-    public static StringBuilder getEmployeeMinSalary() {
-        int minSalary = Integer.MAX_VALUE;
-        int index = -1;
-        for (int i = 0; i < employees.length; i++) {
-            if (employees[i] != null) {
-                if (employees[i].getSalary() < minSalary) {
-                    minSalary = employees[i].getSalary();
-                    index = i;
-                }
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        return sb.append(employees[index].getLastName() + " "
-                + employees[index].getFirstName() + " "
-                + employees[index].getMiddleName());
+        employeeBook1.changeSalary("КарпОВ", "ПетР", "ВасиЛьевич",85_000);
+        employeeBook1.changeDepartment("КарпОВ", "ПетР", "ВасиЛьевич",8);
 
-    }
-
-    //Определение сотрудника с максисмальной зарплатой
-    public static StringBuilder getEmployeeMaxSalary() {
-        int maxSalary = Integer.MIN_VALUE;
-        int index = -1;
-        for (int i = 0; i < employees.length; i++) {
-            if (employees[i] != null) {
-                if (employees[i].getSalary() > maxSalary) {
-                    maxSalary = employees[i].getSalary();
-                    index = i;
-                }
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        return sb.append(employees[index].getLastName() + " "
-                + employees[index].getFirstName() + " "
-                + employees[index].getMiddleName());
-    }
-
-    //вывод списка всех сотрудников со всеми данными
-    public static void printAll() {
-        System.out.println("Список всех сотрудников");
-        for (Employee employee : employees) {
-            if (employee != null) {
-                System.out.println(employee);
-            }
-        }
-    }
-
-    //вывод списка ФИО всех сотрудников
-    public static void printFIO() {
-        System.out.printf("%nСписок ФИО всех сотрудников%n");
-        for (Employee employee : employees) {
-            if (employee != null) {
-                System.out.println(employee.getLastName() + " " + employee.getFirstName() + " " + employee.getMiddleName());
-            }
-        }
-    }
-
-    // индексация зарплаты
-    public static void salaryIndexing(int percent) {
-        for (Employee employee : employees) {
-            if (employee != null) {
-                employee.setSalary(employee.getSalary() * (percent + 100) / 100);
-            }
-        }
-    }
-
-    //поиск сотрудников с зарплатой меньше, чем...
-    public static void searchSalaryLess(int salaryLess) {
-        System.out.println("\nСотрудники, с зарплатой меньше " + salaryLess);
-        for (Employee employee : employees) {
-            if (employee != null && employee.getSalary() < salaryLess) {
-                System.out.println("id: " + employee.getId() + ". ФИО: " + employee.getLastName() +
-                        " " + employee.getFirstName() + " " + employee.getMiddleName() +
-                        ". Зарплата: " + employee.getSalary());
-            }
-        }
-    }
-
-    //поиск сотрудников с зарплатой больше, чем...
-    public static void searchSalaryMore(int salaryMore) {
-        System.out.println("\nСотрудники, с зарплатой больше " + salaryMore);
-        for (Employee employee : employees) {
-            if (employee != null && employee.getSalary() >= salaryMore) {
-                System.out.println("id: " + employee.getId() + ". ФИО: " + employee.getLastName() +
-                        " " + employee.getFirstName() + " " + employee.getMiddleName() +
-                        ". Зарплата: " + employee.getSalary());
-            }
-        }
-    }
-
-    //Определение сотрудника, в отделе, с минимальной зарплатой
-    public static StringBuilder getEmployeeInDepartmentMinSalary(int department) {
-        int minSalary = Integer.MAX_VALUE;
-        int index = -1;
-        for (int i = 0; i < employees.length; i++) {
-            if (employees[i] != null && employees[i].getDepartment() == department && employees[i].getSalary() < minSalary) {
-                minSalary = employees[i].getSalary();
-                index = i;
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        return sb.append(employees[index].getLastName() + " "
-                + employees[index].getFirstName() + " "
-                + employees[index].getMiddleName());
-
-    }
-
-    //Определение сотрудника, в отделе, с максисмальной зарплатой
-    public static StringBuilder getEmployeeInDepartmentMaxSalary(int department) {
-        int maxSalary = Integer.MIN_VALUE;
-        int index = -1;
-        for (int i = 0; i < employees.length; i++) {
-            if (employees[i] != null && employees[i].getDepartment() == department && employees[i].getSalary() > maxSalary) {
-                maxSalary = employees[i].getSalary();
-                index = i;
-            }
-        }
-        StringBuilder sb = new StringBuilder();
-        return sb.append(employees[index].getLastName() + " "
-                + employees[index].getFirstName() + " "
-                + employees[index].getMiddleName());
-    }
-
-    //сумма затрат на зарплату по отделу
-    public static int getSumInDepartment(int department) {
-        int sum = 0;
-        for (Employee employee : employees) {
-            if (employee != null && employee.getDepartment() == department) {
-                sum = sum + employee.getSalary();
-            }
-        }
-        return sum;
-    }
-    //расчет средней зарплаты по отделу
-    public static float getAverageSalaryInDepartment(int department) {
-        int quantity = 0;
-        for (Employee employee : employees) {
-            if (employee != null && employee.getDepartment() == department) {
-                quantity++;
-            }
-        }
-        return (float) getSumInDepartment(department) / quantity;
+        employeeBook1.printAllEmployeeInDepartments();
     }
 
 
-    //индексация зарплаты в отделе
-    public static void salaryIndexingInDepartment(int department, int percent) {
-        for (Employee employee : employees) {
-            if (employee != null && employee.getDepartment() == department) {
-                employee.setSalary(employee.getSalary() * (percent + 100) / 100);
-            }
-        }
-    }
-
-    //вывод списка всех сотрудников из отдела, со всеми данными
-    public static void printDepartment(int department) {
-        System.out.println("\nСписок всех сотрудников отдела " + department);
-        for (Employee employee : employees) {
-            if (employee != null && employee.getDepartment() == department) {
-                System.out.println("id: " + employee.getId() + ". ФИО: " + employee.getLastName() +
-                        " " + employee.getFirstName() + " " + employee.getMiddleName() +
-                        ". Зарплата: " + employee.getSalary());
-            }
-        }
-    }
 }
